@@ -169,6 +169,29 @@ public final class VTreePanel extends CPanel
 				m_adaptee.keyPressed(e);
 		}
 	}   //  VTreePanel_keyAdapter
+	class VTreePanel_keyAdapter2 extends java.awt.event.KeyAdapter
+	{
+		VTreePanel m_adaptee;
+
+		/**
+		 * 	VTreePanel_keyAdapter
+		 *	@param adaptee
+		 */
+		VTreePanel_keyAdapter2(VTreePanel adaptee)
+		{
+			m_adaptee = adaptee;
+		}
+
+		/**
+		 * 	Key Pressed
+		 *	@param e
+		 */
+		public void keyPressed2(KeyEvent e)
+		{
+			if (e.getKeyCode() == KeyEvent.VK_CONTROL)
+				m_adaptee.keyPressed2(e);
+		}
+	}   //  VTreePanel_keyAdapter
 	
 	
 	/**
@@ -344,7 +367,7 @@ public final class VTreePanel extends CPanel
 	private JScrollPane treePane = new JScrollPane();
 	private MouseListener mouseListener = new VTreePanel_mouseAdapter(this);
 	private KeyListener keyListener = new VTreePanel_keyAdapter(this);
-
+	private KeyListener keyListener2 = new VTreePanel_keyAdapter2(this);
 	//
 	private int			m_WindowNo;
 	/** Tree ID                     */
@@ -400,25 +423,29 @@ public final class VTreePanel extends CPanel
 		treePart.setLayout(new BorderLayout());
 		treePart.add(treePane, BorderLayout.CENTER);
 		treePart.setBorder(BorderFactory.createEmptyBorder());
-		
+		treePart.addKeyListener(keyListener2);
 		//
 		treeExpand.setText(Msg.getMsg(Env.getCtx(), "ExpandTree"));
 		treeExpand.setActionCommand("Expand");
 		treeExpand.addMouseListener(mouseListener);
 		treeExpand.addActionListener(this);
 		//
-		treeSearchLabel.setText(Msg.getMsg(Env.getCtx(), "TreeSearch") + " ");
+		//treeSearchLabel.setText(Msg.getMsg(Env.getCtx(), "TreeSearch") + " ");
+		treeSearchLabel.setText("Search ");
 		treeSearchLabel.setLabelFor(treeSearch);
 		treeSearchLabel.setToolTipText(Msg.getMsg(Env.getCtx(), "TreeSearchText"));
 
 		treeSearch.setBackground(AdempierePLAF.getInfoBackground());
-		treeSearch.addKeyListener(keyListener);
+		treeSearch.addKeyListener(keyListener);//FLAG
+		
 		southPanel.setLayout(southLayout);
-		southPanel.add(treeExpand, BorderLayout.WEST);
-		southPanel.add(treeSearchLabel, BorderLayout.CENTER);
-		southPanel.add(treeSearch, BorderLayout.EAST);
-		treePart.add(southPanel, BorderLayout.SOUTH);
+		southPanel.add(treeExpand, BorderLayout.EAST);
+		southPanel.add(treeSearchLabel, BorderLayout.WEST);//FLAG
+		southPanel.add(treeSearch, BorderLayout.CENTER);
+		treePart.add(southPanel, BorderLayout.NORTH);
+
 		//
+		
 		centerSplitPane.setOpaque(false);
 		barScrollPane = new JScrollPane();
 		barScrollPane.getViewport().add(bar);
@@ -491,11 +518,13 @@ public final class VTreePanel extends CPanel
 		return centerSplitPane.getDividerLocation();
 	}	//	getDividerLocation
 	
-
 	/**
 	 *  Enter Key
 	 *  @param e event
 	 */
+	protected void keyPressed2(KeyEvent e){
+		treeSearch.requestFocus();
+	}
 	protected void keyPressed(KeyEvent e)
 	{
 
@@ -562,8 +591,7 @@ public final class VTreePanel extends CPanel
 		}   //  treeSearch
 
 	}   //  keyPressed
-
-
+	
 	/*************************************************************************/
 
 	/**
